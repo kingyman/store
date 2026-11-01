@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">شركة لوكسينا للمنتجات | براند مصري سعودي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c59b27;
+            --primary-dark: #9a781b;
+            --dark: #222222;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --gray: #6c757d;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --border: #e9ecef;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--gray);
+            font-size: 0.75rem;
+            display: block;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .cart-icon-btn, .admin-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--dark);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e1e1e, #333333);
+            color: var(--white);
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        .hero h1 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 20px 0 15px;
+            font-size: 1.3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 45px;
+            height: 3px;
+            background: var(--primary);
+            margin: 6px auto 0;
+            border-radius: 2px;
+        }
+
+        /* شبكة المنتجات */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .product-info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-cat {
+            font-size: 0.7rem;
+            color: var(--primary-dark);
+            font-weight: bold;
+        }
+
+        .product-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 4px 0 6px;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            color: var(--dark);
+            font-weight: bold;
+            margin-top: auto;
+            margin-bottom: 8px;
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* نوافذ منبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 200;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        @media (min-width: 768px) {
+            .modal {
+                align-items: center;
+            }
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            border-radius: 15px 15px 0 0;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 768px) {
+            .modal-content {
+                border-radius: 12px;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--gray);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .admin-prod-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .admin-prod-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 99;
+        }
+
+        .bottom-nav button, .bottom-nav a {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--dark);
+            font-size: 0.75rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .bottom-nav i {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <span id="dispBrandName">لوكسينا</span>
+                <span id="dispBrandSub">براند مصري سعودي للعناية</span>
+            </a>
+            <div class="header-actions">
+                <button class="admin-btn" onclick="openAdmin()" title="لوحة تحكم المدير">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="cart-icon-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1 id="dispHeroTitle">لوكسينا للجمال والعناية</h1>
+        <p id="dispHeroSub">منتجات متخصصة للشعر، البشرة، الأظافر، الرموش والجسم بأعلى جودة.</p>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">قائمة المنتجات</h2>
+        <div class="products-grid" id="productsContainer"></div>
+    </div>
+
+    <!-- نافذة لوحة تحكم المدير الشاملة -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-tools"></i> لوحة الإدارة المتكاملة</h3>
+                <button class="close-btn" onclick="closeAdmin()">&times;</button>
+            </div>
+
+            <!-- تسجيل دخول المدير -->
+            <div id="adminAuth">
+
+                
+
+<p style="font-size: 0.85rem; margin-bottom: 10px; color: var(--gray);">أدخل كلمة مرور الإدارة للمتابعة : <b></b>):</p>
+
+
+
+                <input type="password" id="adminPassInput" class="form-control" placeholder="كلمة المرور">
+                <button class="btn-submit" style="margin-top: 10px;" onclick="verifyAdmin()">تسجيل الدخول</button>
+            </div>
+
+            <!-- محتوى لوحة التحكم -->
+            <div id="adminDashboard" style="display: none;">
+                <div class="tabs">
+                    <button class="tab-btn active" id="tabBtnProds" onclick="switchAdminTab('prods')">المنتجات</button>
+                    <button class="tab-btn" id="tabBtnSettings" onclick="switchAdminTab('settings')">إعدادات المتجر والواتساب</button>
+                </div>
+
+                <!-- تبويب إدارة وتعديل المنتجات -->
+                <div id="tabContentProds">
+                    <h4 id="formProdHeading" style="margin-bottom: 10px; font-size: 0.95rem;">إضافة منتج جديد</h4>
+                    <input type="hidden" id="editProdId">
+
+                    <div class="form-group">
+                        <label>اسم المنتج</label>
+                        <input type="text" id="prodNameInput" class="form-control" placeholder="اسم المنتج">
+                    </div>
+
+                    <div class="form-group">
+                        <label>القسم</label>
+                        <select id="prodCatInput" class="form-control">
+                            <option value="عناية بالشعر">عناية بالشعر</option>
+                            <option value="عناية بالبشرة">عناية بالبشرة</option>
+                            <option value="عناية بالأظافر">عناية بالأظافر</option>
+                            <option value="عناية بالرموش">عناية بالرموش</option>
+                            <option value="عناية بالجسم">عناية بالجسم</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>السعر (ريال)</label>
+                        <input type="number" id="prodPriceInput" class="form-control" placeholder="السعر">
+                    </div>
+
+                    <div class="form-group">
+                        <label>صورة المنتج (اختر صورة من الهاتف أو التقط بالكاميرا)</label>
+                        <input type="file" id="prodImgFileInput" class="form-control" accept="image/*" onchange="previewSelectedImage()">
+                        <div id="imagePreview" style="margin-top: 8px; text-align: center;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-submit" id="saveProdBtn" onclick="saveProduct()"><i class="fas fa-plus"></i> حفظ ونشر المنتج</button>
+                        <button class="btn-submit" id="cancelEditBtn" style="display:none; background:#6c757d;" onclick="resetProdForm()">إلغاء التعديل</button>
+                    </div>
+
+                    <h4 style="margin: 20px 0 10px; font-size: 0.95rem;">المنتجات المعروضة (<span id="adminTotalProds">0</span>)</h4>
+                    <div id="adminProdsList"></div>
+                </div>
+
+                <!-- تبويب إعدادات المتجر والتواصل -->
+                <div id="tabContentSettings" style="display: none;">
+                    <h4 style="margin-bottom: 12px; font-size: 0.95rem;">تعديل بيانات التواصل ورقم الواتساب</h4>
+                    
+                    <div class="form-group">
+                        <label>رقم الواتساب لاستقبال الطلبات (مع الرمز الدولي بدون + أو 00)</label>
+                        <input type="tel" id="setWhatsapp" class="form-control" placeholder="مثال: 967774552793 أو 966500000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>رقم الهاتف للاتصال المباشر</label>
+                        <input type="tel" id="setPhone" class="form-control" placeholder="مثال: +967 774 552 793">
+                    </div>
+
+                    <div class="form-group">
+                        <label>اسم المتجر الرئيسي</label>
+                        <input type="text" id="setBrandName" class="form-control" placeholder="لوكسينا">
+                    </div>
+
+                    <div class="form-group">
+                        <label>العنوان والمركز</label>
+                        <input type="text" id="setAddress" class="form-control" placeholder="السعودية - أبها">
+                    </div>
+
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid var(--border);">
+
+                    <h4 style="margin-bottom: 10px; font-size: 0.95rem;">تغيير كلمة مرور الإدارة</h4>
+                    <div class="form-group">
+                        <label>كلمة المرور الجديدة</label>
+                        <input type="password" id="setNewPassword" class="form-control" placeholder="اتركها فارغة إذا لم ترد التغيير">
+                    </div>
+
+                    <button class="btn-submit" onclick="saveStoreSettings()"><i class="fas fa-save"></i> حفظ جميع الإعدادات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة السلة والطلب -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>سلة المشتريات</h3>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            
+            <div id="cartItemsList"></div>
+
+            <div id="orderFormArea" style="display: none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 12px;">
+                <div style="font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                    <span>الإجمالي:</span>
+                    <span id="cartTotal" style="color: var(--primary);">0 ريال</span>
+                </div>
+                <input type="text" id="custName" class="form-control" placeholder="الاسم الكامل" style="margin-bottom: 8px;">
+                <input type="tel" id="custPhone" class="form-control" placeholder="رقم الهاتف للتوصيل" style="margin-bottom: 8px;">
+                <input type="text" id="custAddress" class="form-control" placeholder="العنوان والمدينة (أبها أو غيرها)" style="margin-bottom: 12px;">
+                <button class="btn-submit" style="background-color: #25d366;" onclick="sendOrderViaWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط الهاتف السفلي -->
+    <div class="bottom-nav">
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fas fa-home"></i>الرئيسية</button>
+        <button onclick="openCart()"><i class="fas fa-shopping-bag"></i>السلة</button>
+        <button onclick="openAdmin()"><i class="fas fa-user-cog"></i>المدير</button>
+        <a id="bottomNavWhatsapp" href="https://wa.me/967774552793" target="_blank"><i class="fab fa-whatsapp"></i>تواصل</a>
+    </div>
+
+    <script>
+        // الإعدادات الافتراضية للمتجر المستخرجة من الاستمارة
+        const defaultSettings = {
+            whatsapp: "967774552793", // رقم الواتساب المذكور بالاستمارة[span_7](start_span)[span_7](end_span)
+            phone: "+967 774 552 793", // رقم الهاتف[span_8](start_span)[span_8](end_span)
+            brandName: "لوكسينا", // الاسم التجاري[span_9](start_span)[span_9](end_span)
+            address: "السعودية - أبها", // العنوان المذكور[span_10](start_span)[span_10](end_span)
+            adminPass: "123456"
+        };
+
+        const defaultProducts = [
+            { id: 1, name: "زيت إنبات وتقوية الشعر", cat: "عناية بالشعر", price: 85, img: "https://images.unsplash.com/photo-1608248597359-5484860b7313?w=400" },
+            { id: 2, name: "سيروم تفتيح وترطيب البشرة", cat: "عناية بالبشرة", price: 95, img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400" },
+            { id: 3, name: "زيت تغذية وتقوية الأظافر", cat: "عناية بالأظافر", price: 40, img: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400" },
+            { id: 4, name: "سيروم تطويل وتكثيف الرموش", cat: "عناية بالرموش", price: 65, img: "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=400" },
+            { id: 5, name: "مقشر ومفتح للجسم طبيعي", cat: "عناية بالجسم", price: 75, img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400" }
+        ];
+
+        // قراءة التخزين من ذاكرة الهاتف
+        let storeSettings = JSON.parse(localStorage.getItem('luxina_settings')) || defaultSettings;
+        let products = JSON.parse(localStorage.getItem('luxina_products')) || defaultProducts;
+        let cart = [];
+        let currentBase64Image = "";
+
+        // تطبيق بيانات المتجر على الواجهة
+        function applySettingsToUI() {
+            document.getElementById('dispBrandName').innerText = storeSettings.brandName;
+            document.getElementById('pageTitle').innerText = `${storeSettings.brandName} | متجر العناية`;
+            document.getElementById('bottomNavWhatsapp').href = `https://wa.me/${storeSettings.whatsapp.replace(/[^0-9]/g, '')}`;
+        }
+
+        // عرض المنتجات
+        function renderProducts() {
+            const container = document.getElementById('productsContainer');
+            if (products.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--gray);">لا توجد منتجات حالياً.</p>`;
+                return;
+            }
+            container.innerHTML = products.map(prod => `
+                <div class="product-card">
+                    <img src="${prod.img}" alt="${prod.name}" class="product-img">
+                    <div class="product-info">
+                        <span class="product-cat">${prod.cat}</span>
+                        <div class="product-title">${prod.name}</div>
+                        <div class="product-price">${prod.price} ريال</div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${prod.id})">
+                            <i class="fas fa-cart-plus"></i> إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // قراءة الصورة المرفوعة من الهاتف
+        function previewSelectedImage() {
+            const file = document.getElementById('prodImgFileInput').files[0];
+            const previewArea = document.getElementById('imagePreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentBase64Image = e.target.result;
+                    previewArea.innerHTML = `<img src="${currentBase64Image}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 6px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // حفظ المنتج (إضافة أو تعديل)
+        function saveProduct() {
+            const editId = document.getElementById('editProdId').value;
+            const name = document.getElementById('prodNameInput').value.trim();
+            const cat = document.getElementById('prodCatInput').value;
+            const price = parseFloat(document.getElementById('prodPriceInput').value);
+
+            if (!name || isNaN(price) || price <= 0) {
+                alert("يرجى ملء اسم المنتج وسعره بشكل صحيح.");
+                return;
+            }
+
+            if (editId) {
+                // تعديل منتج قائم
+                const index = products.findIndex(p => p.id == editId);
+                if (index !== -1) {
+                    products[index].name = name;
+                    products[index].cat = cat;
+                    products[index].price = price;
+                    if (currentBase64Image) {
+                        products[index].img = currentBase64Image;
+                    }
+                    alert("تم تعديل بيانات المنتج بنجاح!");
+                }
+            } else {
+                // إضافة منتج جديد
+                const img = currentBase64Image || "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400";
+                products.unshift({
+                    id: Date.now(),
+                    name: name,
+                    cat: cat,
+                    price: price,
+                    img: img
+                });
+                alert("تم إضافة ونشر المنتج بنجاح!");
+            }
+
+            localStorage.setItem('luxina_products', JSON.stringify(products));
+            resetProdForm();
+            renderProducts();
+            renderAdminProds();
+        }
+
+        // بدء تعديل منتج
+        function startEditProduct(id) {
+            const prod = products.find(p => p.id == id);
+            if (!prod) return;
+
+            document.getElementById('editProdId').value = prod.id;
+            document.getElementById('prodNameInput').value = prod.name;
+            document.getElementById('prodCatInput').value = prod.cat;
+            document.getElementById('prodPriceInput').value = prod.price;
+            document.getElementById('formProdHeading').innerText = "تعديل بيانات المنتج: " + prod.name;
+            document.getElementById('saveProdBtn').innerHTML = `<i class="fas fa-check"></i> تحديث المنتج`;
+            document.getElementById('cancelEditBtn').style.display = "block";
+            
+            currentBase64Image = prod.img;
+            document.getElementById('imagePreview').innerHTML = `<img src="${prod.img}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 6px;">`;
+            
+            // تمرير للأعلى
+            document.querySelector('.modal-content').scrollTop = 0;
+        }
+
+        // إعادة ضبط نموذج المنتج
+        function resetProdForm() {
+            document.getElementById('editProdId').value = "";
+            document.getElementById('prodNameInput').value = "";
+            document.getElementById('prodPriceInput').value = "";
+            document.getElementById('prodImgFileInput').value = "";
+            document.getElementById('imagePreview').innerHTML = "";
+            document.getElementById('formProdHeading').innerText = "إضافة منتج جديد";
+            document.getElementById('saveProdBtn').innerHTML = `<i class="fas fa-plus"></i> حفظ ونشر المنتج`;
+            document.getElementById('cancelEditBtn').style.display = "none";
+            currentBase64Image = "";
+        }
+
+        // حذف منتج
+        function deleteProduct(id) {
+            if (confirm("هل تريد حذف هذا المنتج نهائياً؟")) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('luxina_products', JSON.stringify(products));
+                renderProducts();
+                renderAdminProds();
+            }
+        }
+
+        // عرض قائمة الإدارة
+        function renderAdminProds() {
+            document.getElementById('adminTotalProds').innerText = products.length;
+            const list = document.getElementById('adminProdsList');
+            if (products.length === 0) {
+                list.innerHTML = `<p style="color: var(--gray); font-size: 0.8rem;">لا توجد منتجات.</p>`;
+                return;
+            }
+            list.innerHTML = products.map(prod => `
+                <div class="admin-prod-item">
+                    <div style="display:flex; align-items:center;">
+                        <img src="${prod.img}" class="admin-prod-thumb">
+                        <div>
+                            <div style="font-weight:600; font-size:0.85rem;">${prod.name}</div>
+                            <small style="color: var(--gray);">${prod.price} ريال | ${prod.cat}</small>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn-edit" onclick="startEditProduct(${prod.id})"><i class="fas fa-pen"></i> تعديل</button>
+                        <button class="btn-danger" onclick="deleteProduct(${prod.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // حفظ إعدادات المتجر ورقم الواتساب
+        function saveStoreSettings() {
+            const whatsapp = document.getElementById('setWhatsapp').value.trim();
+            const phone = document.getElementById('setPhone').value.trim();
+            const brand = document.getElementById('setBrandName').value.trim();
+            const address = document.getElementById('setAddress').value.trim();
+            const newPass = document.getElementById('setNewPassword').value.trim();
+
+            if (!whatsapp) {
+                alert("يرجى إدخال رقم واتساب صالح.");
+                return;
+            }
+
+            storeSettings.whatsapp = whatsapp;
+            if (phone) storeSettings.phone = phone;
+            if (brand) storeSettings.brandName = brand;
+            if (address) storeSettings.address = address;
+            if (newPass) storeSettings.adminPass = newPass;
+
+            localStorage.setItem('luxina_settings', JSON.stringify(storeSettings));
+            applySettingsToUI();
+            alert("تم حفظ وتحديث كافة الإعدادات ورقم الواتساب بنجاح!");
+        }
+
+        // التبديل بين تبويبات لوحة التحكم
+        function switchAdminTab(tab) {
+            if (tab === 'prods') {
+                document.getElementById('tabContentProds').style.display = 'block';
+                document.getElementById('tabContentSettings').style.display = 'none';
+                document.getElementById('tabBtnProds').classList.add('active');
+                document.getElementById('tabBtnSettings').classList.remove('active');
+            } else {
+                document.getElementById('tabContentProds').style.display = 'none';
+                document.getElementById('tabContentSettings').style.display = 'block';
+                document.getElementById('tabBtnProds').classList.remove('active');
+                document.getElementById('tabBtnSettings').classList.add('active');
+
+                // تعبئة الحقول بالبيانات الحالية
+                document.getElementById('setWhatsapp').value = storeSettings.whatsapp;
+                document.getElementById('setPhone').value = storeSettings.phone;
+                document.getElementById('setBrandName').value = storeSettings.brandName;
+                document.getElementById('setAddress').value = storeSettings.address;
+                document.getElementById('setNewPassword').value = "";
+            }
+        }
+
+        // السلة والطلب
+        function addToCart(id) {
+            const prod = products.find(p => p.id === id);
+            cart.push(prod);
+            updateCart();
+            openCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cartCount').innerText = cart.length;
+            const cartItemsList = document.getElementById('cartItemsList');
+            const orderFormArea = document.getElementById('orderFormArea');
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `<p style="text-align:center; color: var(--gray); margin: 20px 0;">السلة فارغة</p>`;
+                orderFormArea.style.display = 'none';
+                return;
+            }
+
+            let total = 0;
+            cartItemsList.innerHTML = cart.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <div style="font-size:0.85rem; font-weight:600;">${item.name}</div>
+                            <small style="color: var(--gray);">${item.price} ريال</small>
+                        </div>
+                        <button class="btn-danger" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cartTotal').innerText = `${total} ريال`;
+            orderFormArea.style.display = 'block';
+        }
+
+        function sendOrderViaWhatsApp() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+
+            if (!name || !phone || !address) {
+                alert("يرجى ملء جميع بيانات التوصيل.");
+                return;
+            }
+
+            const itemsStr = cart.map(i => `- ${i.name} (${i.price} ريال)`).join('%0A');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            // استخدام رقم الواتساب المعدل في الإعدادات
+            const activeWhatsApp = storeSettings.whatsapp.replace(/[^0-9]/g, '');
+
+            const message = `*طلب جديد من متجر ${storeSettings.brandName}*%0A%0A` +
+                            `*الاسم:* ${encodeURIComponent(name)}%0A` +
+                            `*الهاتف:* ${encodeURIComponent(phone)}%0A` +
+                            `*العنوان:* ${encodeURIComponent(address)}%0A%0A` +
+                            `*المنتجات المطلوبة:*%0A${itemsStr}%0A%0A` +
+                            `*الإجمالي:* ${total} ريال سعودي%0A` +
+                            `*طريقة الدفع:* الدفع عند الاستلام`;
+
+            window.open(`https://wa.me/${activeWhatsApp}?text=${message}`, '_blank');
+        }
+
+        // فتح وإغلاق النوافذ
+        function openAdmin() {
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function verifyAdmin() {
+            const pass = document.getElementById('adminPassInput').value;
+            if (pass === storeSettings.adminPass) {
+                document.getElementById('adminAuth').style.display = "none";
+                document.getElementById('adminDashboard').style.display = "block";
+                renderAdminProds();
+            } else {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
+
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeAdmin();
+                closeCart();
+            }
+        };
+
+        // التهيئة
+        applySettingsToUI();
+        renderProducts();
+    </script>
+</body>
+</html>
